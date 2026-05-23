@@ -1,11 +1,13 @@
+import type { ReactNode } from 'react';
 import { useTelegram } from '../useTelegram';
 import { SCHOOL } from '../data';
+import { TelegramIcon, WhatsAppIcon, VkIcon, MaxIcon, GlobeIcon } from './icons';
 
-const SOCIALS: { label: string; icon: string; url: string }[] = [
-  { label: 'Telegram', icon: '✈️', url: SCHOOL.links.telegram },
-  { label: 'WhatsApp', icon: '🟢', url: SCHOOL.links.whatsapp },
-  { label: 'ВКонтакте', icon: '🅥', url: SCHOOL.links.vk },
-  { label: 'MAX', icon: '🅼', url: SCHOOL.links.max },
+const SOCIALS: { label: string; icon: ReactNode; url: string; brand: string }[] = [
+  { label: 'Telegram', icon: <TelegramIcon />, url: SCHOOL.links.telegram, brand: '#229ED9' },
+  { label: 'WhatsApp', icon: <WhatsAppIcon />, url: SCHOOL.links.whatsapp, brand: '#25D366' },
+  { label: 'ВКонтакте', icon: <VkIcon />, url: SCHOOL.links.vk, brand: '#0077FF' },
+  { label: 'MAX', icon: <MaxIcon />, url: SCHOOL.links.max, brand: '#7B61FF' },
 ];
 
 export function Contacts() {
@@ -32,14 +34,20 @@ export function Contacts() {
       <h3 className="section-title section-title--sub">Мы на связи</h3>
       <div className="grid2">
         {SOCIALS.map((s) => (
-          <button key={s.label} className="btn btn--secondary social-btn" onClick={() => open(s.url)}>
+          <button
+            key={s.label}
+            className="btn social-btn"
+            style={{ '--brand': s.brand } as React.CSSProperties}
+            onClick={() => open(s.url)}
+          >
             <span className="social-btn__icon">{s.icon}</span>
             {s.label}
           </button>
         ))}
       </div>
 
-      <button className="btn btn--primary" onClick={() => open(SCHOOL.site)}>
+      <button className="btn btn--primary site-btn" onClick={() => open(SCHOOL.site)}>
+        <GlobeIcon />
         Перейти на сайт
       </button>
     </div>

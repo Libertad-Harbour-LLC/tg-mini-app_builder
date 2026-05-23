@@ -315,8 +315,18 @@ textarea.input {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+  color: var(--brand);
+  border: 1px solid color-mix(in srgb, var(--brand) 35%, transparent);
 }
 
 .social-btn__icon {
-  font-size: 18px;
+  display: inline-flex;
+}
+
+.site-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }

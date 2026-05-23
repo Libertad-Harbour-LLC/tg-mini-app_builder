@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { TelegramWebApp } from './telegram';
+import { verifyInitData } from './api';
 
 const tg: TelegramWebApp | undefined = window.Telegram?.WebApp;
 
@@ -21,6 +22,7 @@ function applyTheme(webApp: TelegramWebApp) {
 
 export function useTelegram() {
   const [scheme, setScheme] = useState<'light' | 'dark'>(tg?.colorScheme ?? 'light');
+  const [verified, setVerified] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!tg) return;
@@ -32,6 +34,11 @@ export function useTelegram() {
       setScheme(tg.colorScheme);
     };
     tg.onEvent('themeChanged', onTheme);
+
+    verifyInitData(tg.initData).then((res) => {
+      if (res) setVerified(res.ok);
+    });
+
     return () => tg.offEvent('themeChanged', onTheme);
   }, []);
 
@@ -43,6 +50,7 @@ export function useTelegram() {
     user: tg?.initDataUnsafe?.user,
     scheme,
     isTelegram: Boolean(tg),
+    verified,
     haptic,
   };
 }
