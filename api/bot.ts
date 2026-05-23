@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { askGroq } from './_lib/assistant';
-import { sendMessage, sendChatAction } from './_lib/telegram';
+import { askGroq } from './_lib/assistant.js';
+import { sendMessage, sendChatAction } from './_lib/telegram.js';
 
 const WELCOME =
   'Здравствуйте! Я — ИИ-ассистент автошколы «ТЕСЛА». ' +
