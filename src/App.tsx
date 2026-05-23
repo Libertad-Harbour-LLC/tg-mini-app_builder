@@ -5,12 +5,14 @@ import { Courses } from './components/Courses';
 import { Schedule } from './components/Schedule';
 import { EnrollForm } from './components/EnrollForm';
 import { Contacts } from './components/Contacts';
+import { Assistant } from './components/Assistant';
 
-type Tab = 'courses' | 'schedule' | 'enroll' | 'contacts';
+type Tab = 'courses' | 'schedule' | 'assistant' | 'enroll' | 'contacts';
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'courses', label: 'Курсы', icon: '🚗' },
   { id: 'schedule', label: 'Расписание', icon: '📅' },
+  { id: 'assistant', label: 'Ассистент', icon: '💬' },
   { id: 'enroll', label: 'Запись', icon: '📝' },
   { id: 'contacts', label: 'Контакты', icon: '📍' },
 ];
@@ -43,6 +45,7 @@ export default function App() {
       <main className="content">
         {tab === 'courses' && <Courses onEnroll={goEnroll} />}
         {tab === 'schedule' && <Schedule onEnroll={() => goEnroll()} />}
+        {tab === 'assistant' && <Assistant />}
         {tab === 'enroll' && <EnrollForm presetCourse={presetCourse} />}
         {tab === 'contacts' && <Contacts />}
       </main>
