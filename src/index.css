@@ -268,3 +268,55 @@ textarea.input {
 .tabbar__label {
   font-weight: 600;
 }
+
+.section-title--sub {
+  font-size: 16px;
+  margin-top: 6px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.chip {
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--tg-link) 40%, transparent);
+  background: transparent;
+  color: var(--tg-link);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip--active {
+  background: var(--tg-button);
+  color: var(--tg-button-text);
+  border-color: var(--tg-button);
+}
+
+.card__title--sm {
+  font-size: 15px;
+  max-width: 70%;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.social-btn__icon {
+  font-size: 18px;
+}

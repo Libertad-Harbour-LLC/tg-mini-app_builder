@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTelegram } from '../useTelegram';
-import { COURSES, SCHOOL } from '../data';
+import { ENROLL_OPTIONS, enrollLabel, SCHOOL } from '../data';
 
 const PHONE_RE = /^\+?[0-9\s\-()]{10,18}$/;
 
@@ -8,7 +8,7 @@ export function EnrollForm({ presetCourse }: { presetCourse?: string }) {
   const { tg, user, haptic } = useTelegram();
   const [name, setName] = useState(user?.first_name ?? '');
   const [phone, setPhone] = useState('');
-  const [course, setCourse] = useState(presetCourse ?? COURSES[0].id);
+  const [course, setCourse] = useState(presetCourse ?? ENROLL_OPTIONS[0].value);
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -26,22 +26,22 @@ export function EnrollForm({ presetCourse }: { presetCourse?: string }) {
     setSubmitting(true);
     haptic('medium');
 
-    const courseTitle = COURSES.find((c) => c.id === course)?.title ?? course;
+    const courseLabel = enrollLabel(course);
     const payload = {
       type: 'enroll',
       name: name.trim(),
       phone: phone.trim(),
       course,
-      courseTitle,
+      courseLabel,
       comment: comment.trim(),
       tg_user_id: user?.id,
       tg_username: user?.username,
     };
 
+    // Если Mini App открыт через reply-keyboard кнопку web_app — заявка уйдёт боту.
     if (tg && typeof tg.sendData === 'function' && tg.initData) {
       try {
         tg.sendData(JSON.stringify(payload));
-        // Telegram закроет приложение и передаст данные боту.
         setDone(true);
         return;
       } catch {
@@ -49,20 +49,20 @@ export function EnrollForm({ presetCourse }: { presetCourse?: string }) {
       }
     }
 
-    // Фолбэк: открыть диалог с ботом (вне keyboard-кнопки sendData недоступен).
-    const text = `Заявка на обучение%0AИмя: ${encodeURIComponent(
-      payload.name,
-    )}%0AТелефон: ${encodeURIComponent(payload.phone)}%0AКатегория: ${encodeURIComponent(
-      courseTitle,
-    )}${payload.comment ? '%0AКомментарий: ' + encodeURIComponent(payload.comment) : ''}`;
-    const link = `https://t.me/${SCHOOL.botUsername}?start=enroll`;
-    if (tg?.openTelegramLink) {
-      tg.openTelegramLink(link);
-    } else {
-      window.open(link, '_blank');
-    }
-    // Дополнительно: можно отправить заявку на свой backend здесь.
-    console.log('enroll payload', payload, text);
+    // Фолбэк: отправка заявки менеджеру через WhatsApp с заполненным текстом.
+    const lines = [
+      'Заявка на обучение (Автошкола Тесла)',
+      `Имя: ${payload.name}`,
+      `Телефон: ${payload.phone}`,
+      `Тариф: ${courseLabel}`,
+    ];
+    if (payload.comment) lines.push(`Комментарий: ${payload.comment}`);
+    const waUrl = `https://api.whatsapp.com/send?phone=${SCHOOL.whatsappPhone}&text=${encodeURIComponent(
+      lines.join('\n'),
+    )}`;
+    if (tg?.openLink) tg.openLink(waUrl);
+    else window.open(waUrl, '_blank');
+
     setSubmitting(false);
     setDone(true);
   };
@@ -108,11 +108,11 @@ export function EnrollForm({ presetCourse }: { presetCourse?: string }) {
         </label>
 
         <label className="field">
-          <span className="field__label">Категория</span>
+          <span className="field__label">Тариф</span>
           <select className="input" value={course} onChange={(e) => setCourse(e.target.value)}>
-            {COURSES.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.title} — {c.subtitle}
+            {ENROLL_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
               </option>
             ))}
           </select>

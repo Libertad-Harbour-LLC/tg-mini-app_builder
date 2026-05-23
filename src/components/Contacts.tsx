@@ -1,17 +1,19 @@
 import { useTelegram } from '../useTelegram';
 import { SCHOOL } from '../data';
 
+const SOCIALS: { label: string; icon: string; url: string }[] = [
+  { label: 'Telegram', icon: '✈️', url: SCHOOL.links.telegram },
+  { label: 'WhatsApp', icon: '🟢', url: SCHOOL.links.whatsapp },
+  { label: 'ВКонтакте', icon: '🅥', url: SCHOOL.links.vk },
+  { label: 'MAX', icon: '🅼', url: SCHOOL.links.max },
+];
+
 export function Contacts() {
   const { tg } = useTelegram();
 
-  const openSite = () => {
-    if (tg?.openLink) tg.openLink(SCHOOL.site);
-    else window.open(SCHOOL.site, '_blank');
-  };
-
-  const openMap = () => {
-    if (tg?.openLink) tg.openLink(SCHOOL.mapUrl);
-    else window.open(SCHOOL.mapUrl, '_blank');
+  const open = (url: string) => {
+    if (tg?.openLink) tg.openLink(url);
+    else window.open(url, '_blank');
   };
 
   return (
@@ -25,16 +27,19 @@ export function Contacts() {
             {SCHOOL.phone}
           </a>
         </div>
-        <div className="contact-row">
-          <span className="contact-row__icon">📍</span>
-          <span>{SCHOOL.address}</span>
-        </div>
       </div>
 
-      <button className="btn btn--primary" onClick={openMap}>
-        Открыть на карте
-      </button>
-      <button className="btn btn--secondary" onClick={openSite}>
+      <h3 className="section-title section-title--sub">Мы на связи</h3>
+      <div className="grid2">
+        {SOCIALS.map((s) => (
+          <button key={s.label} className="btn btn--secondary social-btn" onClick={() => open(s.url)}>
+            <span className="social-btn__icon">{s.icon}</span>
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      <button className="btn btn--primary" onClick={() => open(SCHOOL.site)}>
         Перейти на сайт
       </button>
     </div>
