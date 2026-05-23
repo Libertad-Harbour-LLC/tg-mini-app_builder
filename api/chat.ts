@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { askGroq, type ChatMessage } from './_lib/assistant';
-import { verifyInitData } from './_lib/telegram';
+import { askGroq, type ChatMessage } from './_lib/assistant.js';
+import { verifyInitData } from './_lib/telegram.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
